@@ -1,33 +1,35 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import useDraw from "../hooks/useDraw"
 import { CirclePicker } from "react-color"
+import { io } from "socket.io-client"
+import onDraw from "../utils/onDraw"
+const socket = io("http://localhost:3001")
 
 export default function Home() {
     const [color, setColor] = useState("#000")
+    const [size, setSize] = useState<5 | 7.5 | 10>(5)
 
-    const onDraw = ({ currentPoints, prePoints, ctx }: OnDraw) => {
-        const { x: currX, y: currY } = currentPoints
-        const lineColor = color
-        const lineWidth = 5
+    const onCreate = ({ currentPoints, ctx, prePoints }: OnDraw) => {
+        socket.emit("onDraw", { currentPoints, prePoints, color, size })
 
-        let startingPoint = prePoints ?? currentPoints
-        ctx.beginPath()
-        ctx.lineWidth = lineWidth
-        ctx.strokeStyle = lineColor
-
-        ctx.moveTo(startingPoint.x, startingPoint.y)
-        ctx.lineTo(currX, currY)
-        ctx.stroke()
-
-        ctx.fillStyle = lineColor
-        ctx.beginPath()
-        ctx.arc(startingPoint.x, startingPoint.y, 2, 0, 2 * Math.PI)
-        ctx.fill()
+        onDraw({ currentPoints, ctx, prePoints, color, size })
     }
 
-    const { canvasRef, onMouseDown, handleClear } = useDraw(onDraw)
+    const { canvasRef, onMouseDown, handleClear } = useDraw(onCreate)
+
+    useEffect(() => {
+        const ctx = canvasRef.current?.getContext("2d")
+
+        socket.on("onDraw", ({ currentPoints, prePoints, color, size }) => {
+            if (!ctx) return
+
+            onDraw({ currentPoints, ctx, prePoints, color, size })
+        })
+
+        socket.on("handleClear", handleClear)
+    }, [canvasRef])
 
     return (
         <main
@@ -40,15 +42,44 @@ export default function Home() {
             </h1>
             <div className="flex items-center justify-center w-full mt-20 gap-x-10 ">
                 <div className="flex flex-col gap-4">
-                    <div className="p-4 pt-2 bg-white border-2 border-black rounded-lg">
-                        <h1 className="pb-3 text-xl text-center">Pick Color</h1>
-                        <CirclePicker
-                            color={color}
-                            onChange={(e) => setColor(e.hex)}
-                        />
+                    <div className="p-4 pt-2 bg-white border-2 border-black rounded-lg flex gap-x-6">
+                        {/*        Color Picker  */}
+                        <div>
+                            <h1 className="pb-3 text-xl text-center">
+                                Pick Color
+                            </h1>
+                            <CirclePicker
+                                color={color}
+                                onChange={(e) => setColor(e.hex)}
+                            />
+                        </div>
+                        {/*         Size Picker     */}
+                        <div>
+                            <h1 className="pb-3 text-xl text-center">Size</h1>
+                            <div
+                                style={{ color: color }}
+                                className="flex flex-col gap-y-5 items-center justify-center"
+                            >
+                                <ColorCircle
+                                    style={"small"}
+                                    size={size}
+                                    setSize={setSize}
+                                />
+                                <ColorCircle
+                                    style={"mid"}
+                                    size={size}
+                                    setSize={setSize}
+                                />
+                                <ColorCircle
+                                    style={"large"}
+                                    size={size}
+                                    setSize={setSize}
+                                />
+                            </div>
+                        </div>
                     </div>
                     <button
-                        onClick={() => handleClear(setColor)}
+                        onClick={() => socket.emit("handleClear")}
                         className="px-8 py-2 m-2 bg-white border-2 border-black rounded-md"
                     >
                         Clear
@@ -63,5 +94,24 @@ export default function Home() {
                 />
             </div>
         </main>
+    )
+}
+
+const ColorCircle = ({ style, setSize, size }: ColorCicleProps) => {
+    const circleSize = style == "small" ? 1 : style == "mid" ? 1.5 : 2.25
+    const brushSize = style == "small" ? 5 : style == "mid" ? 7.5 : 10
+
+    const handleSize = () => {
+        setSize(brushSize)
+    }
+
+    return (
+        <div
+            onClick={handleSize}
+            style={{ width: `${circleSize}rem`, height: `${circleSize}rem` }}
+            className={` text-inherit rounded-full hover:scale-125 transition-all cursor-pointer
+            ${size == brushSize ? "border-[3px] border-current" : "bg-current"}
+            `}
+        ></div>
     )
 }
