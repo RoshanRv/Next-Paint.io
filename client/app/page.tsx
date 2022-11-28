@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import useDraw from "../hooks/useDraw"
-import { SketchPicker, CirclePicker } from "react-color"
+import { CirclePicker } from "react-color"
 
 export default function Home() {
     const [color, setColor] = useState("#000")
@@ -16,6 +16,7 @@ export default function Home() {
         ctx.beginPath()
         ctx.lineWidth = lineWidth
         ctx.strokeStyle = lineColor
+
         ctx.moveTo(startingPoint.x, startingPoint.y)
         ctx.lineTo(currX, currY)
         ctx.stroke()
@@ -56,7 +57,7 @@ export default function Home() {
                 <canvas
                     ref={canvasRef}
                     onMouseDown={onMouseDown}
-                    className="bg-white border-2 border-black rounded-md"
+                    className="bg-white border-4 border-black rounded-md"
                     width={750}
                     height={750}
                 />
