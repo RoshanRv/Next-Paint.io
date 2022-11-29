@@ -10,8 +10,6 @@ import getCanvasSize from "../utils/getCanvasSize"
 const socket = io("https://next-paint-io.onrender.com")
 
 export default function Home() {
-    const { height, width } = getCanvasSize()
-
     const [color, setColor] = useState("#000")
     const [size, setSize] = useState<5 | 7.5 | 10>(5)
 
@@ -22,6 +20,12 @@ export default function Home() {
     }
 
     const { canvasRef, onMouseDown, handleClear } = useDraw(onCreate)
+    const [canvasSize, setCanvasSize] = useState({ width: 500, height: 500 })
+
+    useEffect(() => {
+        const { height, width } = getCanvasSize()
+        setCanvasSize({ height, width })
+    }, [])
 
     useEffect(() => {
         const ctx = canvasRef.current?.getContext("2d")
@@ -61,7 +65,7 @@ export default function Home() {
     return (
         <main
             style={{ backgroundImage: "url(bg.svg)", backgroundSize: "cover" }}
-            className="min-h-screen py-10 "
+            className="min-h-screen py-10 lg:min-h-[90vh] lg:h-screen "
         >
             {/*   Title    */}
             <h1 className="p-2 mx-auto text-3xl font-bold text-center text-white bg-black rounded-md md:text-5xl w-max">
@@ -116,8 +120,8 @@ export default function Home() {
                     ref={canvasRef}
                     onMouseDown={onMouseDown}
                     className="bg-white border-4 border-black rounded-md"
-                    width={width}
-                    height={height}
+                    width={canvasSize.width}
+                    height={canvasSize.height}
                 />
             </div>
         </main>
