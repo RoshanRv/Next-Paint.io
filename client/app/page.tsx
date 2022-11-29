@@ -5,10 +5,13 @@ import useDraw from "../hooks/useDraw"
 import { CirclePicker } from "react-color"
 import { io } from "socket.io-client"
 import onDraw from "../utils/onDraw"
+import getCanvasSize from "../utils/getCanvasSize"
 
 const socket = io("https://next-paint-io.onrender.com")
 
 export default function Home() {
+    const { height, width } = getCanvasSize()
+
     const [color, setColor] = useState("#000")
     const [size, setSize] = useState<5 | 7.5 | 10>(5)
 
@@ -58,15 +61,15 @@ export default function Home() {
     return (
         <main
             style={{ backgroundImage: "url(bg.svg)", backgroundSize: "cover" }}
-            className="w-full h-screen py-10"
+            className="min-h-screen py-10 "
         >
             {/*   Title    */}
-            <h1 className="p-2 mx-auto text-3xl font-bold text-center text-white bg-black rounded-md md:text-5xl w-max ">
+            <h1 className="p-2 mx-auto text-3xl font-bold text-center text-white bg-black rounded-md md:text-5xl w-max">
                 Next-Paint.io
             </h1>
-            <div className="flex items-center justify-center w-full mt-20 gap-x-10 ">
+            <div className="flex flex-col items-center justify-center mt-20 lg:flex-row gap-x-10 ">
                 <div className="flex flex-col gap-4">
-                    <div className="p-4 pt-2 bg-white border-2 border-black rounded-lg flex gap-x-6">
+                    <div className="flex p-4 pt-2 bg-white border-2 border-black rounded-lg gap-x-6">
                         {/*        Color Picker  */}
                         <div>
                             <h1 className="pb-3 text-xl text-center">
@@ -82,7 +85,7 @@ export default function Home() {
                             <h1 className="pb-3 text-xl text-center">Size</h1>
                             <div
                                 style={{ color: color }}
-                                className="flex flex-col gap-y-5 items-center justify-center"
+                                className="flex flex-col items-center justify-center gap-y-5"
                             >
                                 <ColorCircle
                                     style={"small"}
@@ -113,8 +116,8 @@ export default function Home() {
                     ref={canvasRef}
                     onMouseDown={onMouseDown}
                     className="bg-white border-4 border-black rounded-md"
-                    width={750}
-                    height={750}
+                    width={width}
+                    height={height}
                 />
             </div>
         </main>
