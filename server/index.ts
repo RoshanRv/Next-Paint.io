@@ -1,6 +1,6 @@
-const express = require("express")
-const { createServer } = require("http")
-const { Server } = require("socket.io")
+import express from "express"
+import { createServer } from "http"
+import { Server } from "socket.io"
 
 const app = express()
 const httpServer = createServer(app)
@@ -50,5 +50,5 @@ io.on("connection", (socket: any) => {
 })
 
 httpServer.listen(PORT, () => {
-    console.log("Server is running at 3001")
+    console.log(`Server is running at ${PORT} `)
 })
