@@ -23,6 +23,14 @@ interface Points {
 }
 
 io.on("connection", (socket) => {
+    socket.on("client-ready", () => {
+        socket.broadcast.emit("get-state")
+    })
+
+    socket.on("canvas-state", (state: string) => {
+        socket.broadcast.emit("canvas-state-from-server", state)
+    })
+
     socket.on(
         "onDraw",
         ({ currentPoints, prePoints, color, size }: OnDrawSocketProps) => {

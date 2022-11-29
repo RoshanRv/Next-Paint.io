@@ -5,6 +5,7 @@ import useDraw from "../hooks/useDraw"
 import { CirclePicker } from "react-color"
 import { io } from "socket.io-client"
 import onDraw from "../utils/onDraw"
+
 const socket = io("http://localhost:3001")
 
 export default function Home() {
@@ -22,6 +23,22 @@ export default function Home() {
     useEffect(() => {
         const ctx = canvasRef.current?.getContext("2d")
 
+        socket.emit("client-ready")
+
+        socket.on("get-state", () => {
+            if (!canvasRef.current?.toDataURL()) return
+
+            socket.emit("canvas-state", canvasRef.current.toDataURL())
+        })
+
+        socket.on("canvas-state-from-server", (state: string) => {
+            const img = new Image()
+            img.src = state
+            img.onload = () => {
+                ctx?.drawImage(img, 0, 0)
+            }
+        })
+
         socket.on("onDraw", ({ currentPoints, prePoints, color, size }) => {
             if (!ctx) return
 
@@ -29,6 +46,13 @@ export default function Home() {
         })
 
         socket.on("handleClear", handleClear)
+
+        return () => {
+            socket.off("get-state")
+            socket.off("canvas-state-from-server")
+            socket.off("onDraw")
+            socket.off("handleClear")
+        }
     }, [canvasRef])
 
     return (
