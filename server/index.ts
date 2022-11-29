@@ -10,6 +10,8 @@ const io = new Server(httpServer, {
     },
 })
 
+const PORT = process.env.PORT || 3001
+
 interface OnDrawSocketProps {
     currentPoints: Points
     prePoints: Points | null
@@ -47,6 +49,6 @@ io.on("connection", (socket) => {
     })
 })
 
-httpServer.listen(3001, () => {
+httpServer.listen(PORT, () => {
     console.log("Server is running at 3001")
 })
