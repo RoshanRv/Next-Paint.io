@@ -1,3 +1,5 @@
+"use client"
+
 const getCanvasSize = () => {
     const screenWidth = window.screen.width
     if (screenWidth > 1024) return { width: 750, height: 750 }
