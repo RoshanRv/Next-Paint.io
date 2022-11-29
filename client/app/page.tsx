@@ -6,7 +6,7 @@ import { CirclePicker } from "react-color"
 import { io } from "socket.io-client"
 import onDraw from "../utils/onDraw"
 
-const socket = io("http://localhost:3001")
+const socket = io("https://next-paint-io.onrender.com")
 
 export default function Home() {
     const [color, setColor] = useState("#000")
