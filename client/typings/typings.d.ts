@@ -25,3 +25,20 @@ interface ColorCicleProps {
 interface SizeProps {
     size: 5 | 7.5 | 10
 }
+
+interface RoomProps {
+    id: string
+}
+
+interface UserProps {
+    name: string
+    roomId: string
+    leader: string
+    members: string[]
+}
+
+type CallBack = (e: UserProps) => UserProps
+interface UserContext {
+    user: UserProps
+    setUser: ((user: UserProps) => void) & ((e: CallBack) => void)
+}
