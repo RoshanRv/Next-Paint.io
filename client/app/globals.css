@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn-shadow {
+    -webkit-box-shadow: -5px 6px 1px 0px rgba(0, 0, 0, 0.62);
+    -moz-box-shadow: -5px 6px 1px 0px rgba(0, 0, 0, 1);
+    box-shadow: -5px 6px 1px 0px rgba(0, 0, 0, 0.361);
+}
+
+.glass {
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: -8px 8px 5px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(5.5px);
+    -webkit-backdrop-filter: blur(5.5px);
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.22);
+}
