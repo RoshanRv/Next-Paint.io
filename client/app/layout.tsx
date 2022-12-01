@@ -2,9 +2,6 @@
 
 import { createContext, useState } from "react"
 import "./globals.css"
-import { Water_Brush } from "@next/font/google"
-
-const font = Water_Brush({ weight: ["400"], variable: "--font-sketch" })
 
 export const UserContext = createContext({} as UserContext)
 
@@ -15,7 +12,7 @@ export default function RootLayout({
 }) {
     const [user, setUser] = useState({} as UserProps)
     return (
-        <html lang="en" className={"font-disp"}>
+        <html lang="en">
             {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
