@@ -1,12 +1,12 @@
 "use client"
 
-import { use, useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import useDraw from "../../../hooks/useDraw"
 import { CirclePicker } from "react-color"
 import { io } from "socket.io-client"
 import onDraw from "../../../utils/onDraw"
 import getCanvasSize from "../../../utils/getCanvasSize"
-import { UserContext } from "../../layout"
+import { UserContext } from "../../../components/ContextProvider"
 
 const serverUrl =
     process.env.NODE_ENV === "production"

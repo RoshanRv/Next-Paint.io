@@ -2,12 +2,11 @@
 
 import { useContext, useEffect, useState } from "react"
 import { customAlphabet } from "nanoid"
-import { UserContext } from "./layout"
+import { UserContext } from "../components/ContextProvider"
 import { useRouter } from "next/navigation"
 
 export default function Home() {
     const nanoid = customAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4)
-
     const { user, setUser } = useContext(UserContext)
     const [name, setName] = useState("")
     const [joinId, setJoinId] = useState("")

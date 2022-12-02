@@ -1,18 +1,15 @@
 "use client"
 
-import { createContext, useState } from "react"
 import "./globals.css"
-
-export const UserContext = createContext({} as UserContext)
+import ContextProvider from "../components/ContextProvider"
 
 export default function RootLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    const [user, setUser] = useState({} as UserProps)
     return (
-        <html lang="en">
+        <html lang="en" className="font-disp">
             {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
@@ -24,9 +21,7 @@ export default function RootLayout({
                 ></link>
             </head>
             <body>
-                <UserContext.Provider value={{ user, setUser }}>
-                    {children}
-                </UserContext.Provider>
+                <ContextProvider>{children}</ContextProvider>
             </body>
         </html>
     )
