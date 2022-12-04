@@ -25,7 +25,7 @@ export default function Home() {
     const handleJoinRoom = () => {
         if (!name) return setNameError(true)
         setNameError(false)
-        if (!joinId || joinId.length < 4) return setJoinIdError(true)
+        if (!joinId || joinId.length > 4) return setJoinIdError(true)
         setJoinIdError(false)
         setUser({ name, roomId: joinId, members: [], leader: "" })
         router.push(`/room/${joinId}`)
@@ -53,7 +53,7 @@ export default function Home() {
                     type="text"
                     placeholder="Room ID"
                     value={joinId}
-                    onChange={(e) => setJoinId(e.target.value)}
+                    onChange={(e) => setJoinId(e.target.value.toUpperCase())}
                     className="p-2 text-lg border-2 border-black rounded-md w-60 md:w-80 outline-0 btn-shadow"
                 />
                 {joinIdError && (

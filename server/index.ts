@@ -32,13 +32,24 @@ io.on("connection", (socket) => {
 
     socket.on("client-ready", (roomId: string, name: string) => {
         socket.to(roomId).emit("get-state")
-        //socket.to(roomId).emit("update-members", name)
+        socket.to(roomId).emit("get-members", name)
     })
 
-    // socket.on("client-ready-leader", (roomId: string, name: string) => {
-    //     socket.to(roomId).emit("get-state")
-    //     io.to(roomId).emit("update-members", name)
-    // })
+    socket.on("client-ready-leader", (roomId: string, name: string) => {
+        socket.to(roomId).emit("get-state")
+        io.to(roomId).emit("get-members", name)
+    })
+
+    socket.on(
+        "receive-members",
+        (roomId: string, members: string[], name: string) => {
+            io.to(roomId).emit("update-members", members, name)
+        }
+    )
+
+    socket.on("exit", (roomId: string, name: string) => {
+        socket.to(roomId).emit("remove-member", name)
+    })
 
     socket.on("canvas-state", (state: string, roomId: string) => {
         socket.to(roomId).emit("canvas-state-from-server", state)

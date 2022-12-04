@@ -1,12 +1,15 @@
 "use client"
 
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import useDraw from "../../../hooks/useDraw"
 import { CirclePicker } from "react-color"
 import { io } from "socket.io-client"
 import onDraw from "../../../utils/onDraw"
 import getCanvasSize from "../../../utils/getCanvasSize"
 import { UserContext } from "../../../components/ContextProvider"
+import RoomMembers from "../../../components/RoomMembers"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 const serverUrl =
     process.env.NODE_ENV === "production"
@@ -24,6 +27,9 @@ const Room = ({ params }: ParamsProps) => {
     const roomId = params.id
     const [color, setColor] = useState("#000")
     const [size, setSize] = useState<5 | 7.5 | 10>(5)
+    const [membersState, setMembersState] = useState<string[]>([])
+    const membersRef = useRef<string[]>([])
+    const router = useRouter()
 
     const onCreate = ({ currentPoints, ctx, prePoints }: OnDraw) => {
         socket.emit("onDraw", { currentPoints, prePoints, color, size, roomId })
@@ -42,10 +48,26 @@ const Room = ({ params }: ParamsProps) => {
 
         socket.emit("join-room", { roomId })
 
-        socket.emit("client-ready", roomId, user.name)
+        if (user.leader === user.name) {
+            socket.emit("client-ready-leader", roomId, user.name)
+        } else {
+            socket.emit("client-ready", roomId, user.name)
+        }
 
-        socket.on("update-members", (name: string) => {
-            setUser((e: UserProps) => ({ ...e, members: [...e.members, name] }))
+        socket.on("get-members", (name: string) => {
+            socket.emit("receive-members", roomId, membersRef.current, name)
+        })
+
+        socket.on("update-members", (members: string[], name: string) => {
+            membersRef.current = [...members, name]
+            setMembersState(membersRef.current)
+        })
+
+        socket.on("remove-member", (name: string) => {
+            membersRef.current = membersRef.current.filter(
+                (member) => member !== name
+            )
+            setMembersState(membersRef.current)
         })
 
         socket.on("get-state", () => {
@@ -65,6 +87,11 @@ const Room = ({ params }: ParamsProps) => {
         return () => {
             socket.off("get-state")
             socket.off("canvas-state-from-server")
+            socket.off("get-members")
+            socket.off("update-members")
+            socket.off("remove-member")
+
+            socket.emit("exit", roomId, user.name)
         }
     }, [])
 
@@ -85,6 +112,8 @@ const Room = ({ params }: ParamsProps) => {
         }
     }, [canvasRef])
 
+    if (!user.name) router.push("/")
+
     return (
         <main
             style={{
@@ -94,9 +123,11 @@ const Room = ({ params }: ParamsProps) => {
             className="min-h-screen py-10 "
         >
             {/*   Title    */}
-            <h1 className="p-2 mx-auto text-3xl font-bold text-center text-white bg-black rounded-md md:text-5xl w-max">
-                Next-Paint.io
-            </h1>
+            <Link href={"/"}>
+                <h1 className="p-2 mx-auto text-3xl font-bold text-center text-white bg-black rounded-md md:text-5xl w-max">
+                    Next-Paint.io
+                </h1>
+            </Link>
             <h1 className="p-2 mx-auto mt-8 text-2xl font-bold text-center text-white bg-black rounded-md md:text-4xl w-max">
                 Room ID : {roomId}
             </h1>
@@ -145,6 +176,7 @@ const Room = ({ params }: ParamsProps) => {
                         Clear
                     </button>
                 </div>
+                {/*         Canvas       */}
                 <canvas
                     ref={canvasRef}
                     onMouseDown={onMouseDown}
@@ -152,6 +184,7 @@ const Room = ({ params }: ParamsProps) => {
                     width={canvasSize.width}
                     height={canvasSize.height}
                 />
+                <RoomMembers members={membersState} />
             </div>
         </main>
     )
