@@ -2,7 +2,7 @@
 
 A Multiplayer Drawing App Created Using Next JS & Websockets.
 
-![next-paint.io](https://user-images.githubusercontent.com/75238302/204462115-a1781f45-b18c-4984-b0a5-b63c02d95e86.png)
+![next-paint.io](https://media-exp1.licdn.com/dms/image/C5622AQGaJmae-X0pYA/feedshare-shrink_800/0/1670229983921?e=1672876800&v=beta&t=7gjpidHu1rz771q65_fLhSd-xBDohZPbr2wpS1ARYeo)
 
 ## Technologies
 
