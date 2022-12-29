@@ -2,7 +2,7 @@
 
 A Multiplayer Drawing App With Rooms Created Using Next JS & Websockets.
 
-![nextpaint.io-preview](https://media-exp1.licdn.com/dms/image/C5622AQGaJmae-X0pYA/feedshare-shrink_800/0/1670229983921?e=1672876800&v=beta&t=7gjpidHu1rz771q65_fLhSd-xBDohZPbr2wpS1ARYeo)
+![nextpaint.io-preview](https://user-images.githubusercontent.com/75238302/209990389-212a0282-d2ea-419c-b4c3-5749c9b17727.jpeg)
 
 ## Technologies
 
