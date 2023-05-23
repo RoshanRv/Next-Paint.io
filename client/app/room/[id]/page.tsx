@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import useDraw from "../../../hooks/useDraw"
 import { CirclePicker } from "react-color"
 import { io } from "socket.io-client"
@@ -23,7 +23,7 @@ interface ParamsProps {
 }
 
 const Room = ({ params }: ParamsProps) => {
-    const { setUser, user } = useContext(UserContext)
+    // const { setUser, user } = useContext(UserContext)
     const roomId = params.id
     const [color, setColor] = useState("#000")
     const [size, setSize] = useState<5 | 7.5 | 10>(5)
@@ -48,11 +48,11 @@ const Room = ({ params }: ParamsProps) => {
 
         socket.emit("join-room", { roomId })
 
-        if (user.leader === user.name) {
-            socket.emit("client-ready-leader", roomId, user.name)
-        } else {
-            socket.emit("client-ready", roomId, user.name)
-        }
+        // if (user.leader === user.name) {
+        //     socket.emit("client-ready-leader", roomId, user.name)
+        // } else {
+        //     socket.emit("client-ready", roomId, user.name)
+        // }
 
         socket.on("get-members", (name: string) => {
             socket.emit("receive-members", roomId, membersRef.current, name)
@@ -91,7 +91,7 @@ const Room = ({ params }: ParamsProps) => {
             socket.off("update-members")
             socket.off("remove-member")
 
-            socket.emit("exit", roomId, user.name)
+            // socket.emit("exit", roomId, user.name)
         }
     }, [])
 
@@ -112,7 +112,7 @@ const Room = ({ params }: ParamsProps) => {
         }
     }, [canvasRef])
 
-    if (!user.name) router.push("/")
+    // if (!user.name) router.push("/")
 
     return (
         <main
