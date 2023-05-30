@@ -1,4 +1,4 @@
-# Next-Paint.io
+# Pinturillo
 
 A Multiplayer Drawing App With Rooms Created Using Next JS & Websockets.
 
