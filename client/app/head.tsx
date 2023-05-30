@@ -1,7 +1,7 @@
 export default function Head() {
     return (
         <>
-            <title>Next-Paint.io</title>
+            <title>Pinturillo</title>
             <meta
                 content="width=device-width, initial-scale=1"
                 name="viewport"

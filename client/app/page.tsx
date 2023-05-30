@@ -32,13 +32,10 @@ export default function Home() {
     }
 
     return (
-        <main
-            style={{ backgroundImage: "url(bg.svg)", backgroundSize: "cover" }}
-            className="min-h-screen py-10 lg:min-h-[90vh] lg:h-screen w-full"
-        >
+        <main className="min-h-screen py-10 bg-gradient-to-br from-purple-900 to-blue-900">
             {/*   Title    */}
             <h1 className="p-2 mx-auto text-3xl font-bold text-center text-white bg-black rounded-md md:text-5xl w-max">
-                Next-Paint.io
+                Pinturillo
             </h1>
             <div className="flex flex-col p-6 mx-auto mt-20 rounded-lg borer-2 glass md:p-10 gap-y-6 w-max ">
                 <input
